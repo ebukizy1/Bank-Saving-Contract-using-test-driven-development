@@ -70,9 +70,8 @@ describe("Save Contract " , async ()=>{
         it("test that address zero cannot deposit ", async()=>{
             const {owner, saveContract} = await loadFixture(deploySavingContract);
                const zeroAddress = await saveContract.returnAddressZero();
-
                 expect(owner.address).is.not.equal(zeroAddress);
-                
+    
         })
     })
 
