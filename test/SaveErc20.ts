@@ -44,7 +44,7 @@ describe("Save Contract " , async ()=>{
 
 
             const balanceOfUserWithOurToken = await emaxToken.balanceOf(otherAccount.address);
-            expect(balanceOfUserWithOurToken).to.equal(amountOfTokenOwnerTransferToUser)
+            expect(balanceOfUserWithOurToken).to.equal(amountOfTokenOwnerTransferToUser);
 
             await emaxToken.connect(owner).approve(saveContract.target,allowedAmountToSpend);
 
@@ -72,8 +72,36 @@ describe("Save Contract " , async ()=>{
                const zeroAddress = await saveContract.returnAddressZero();
                 expect(owner.address).is.not.equal(zeroAddress);
     
+        });
+        it("test amount must be greater than zero ", async ()=>{
+            const {owner , saveContract, emaxToken, totalAmountMinted, allowedAmountToSpend} = await loadFixture(deploySavingContract);
+
+            const ownerBalance = await emaxToken.balanceOf(owner.address);
+            expect(ownerBalance).to.equal(totalAmountMinted);
+            await emaxToken.connect(owner).approve(saveContract.target,allowedAmountToSpend);
+
+            await expect(saveContract.deposit(0)).to.be.revertedWith("can't save zero value");
         })
-    })
+
+
+        it("test that user balance must be greater than or equal to the amount deposit", async () => {
+            const { owner, saveContract, emaxToken, totalAmountMinted, otherAccount } = await loadFixture(deploySavingContract);
+        
+            await emaxToken.connect(owner).transfer(otherAccount.address, 4000);
+            await emaxToken.connect(otherAccount).approve(saveContract.target, 40000);
+        
+            try {
+                await saveContract.deposit(10000000);
+                assert.fail("Expected revert not received");
+            } catch (error) {
+                assert(`Expected "VM Exception" but got ${error}`);
+                assert(`Expected "not enough token" but got ${error}`);
+            }
+        });
+        
+    });
+
+    
 
 
 })
