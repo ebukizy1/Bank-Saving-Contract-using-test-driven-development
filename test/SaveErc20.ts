@@ -98,6 +98,19 @@ describe("Save Contract " , async ()=>{
                 assert(`Expected "not enough token" but got ${error}`);
             }
         });
+        describe("Event Test For Deposit", async ()=>{
+            const {owner, saveContract, emaxToken, allowedAmountToSpend,
+                amountDepositedByUser, totalAmountMinted} = await loadFixture(deploySavingContract);
+                //test that owner can save token in our contract 
+                const ownerBalance = await emaxToken.balanceOf(owner.address);
+                expect(ownerBalance).to.equal(totalAmountMinted);
+    
+        
+                await emaxToken.connect(owner).approve(saveContract.target,allowedAmountToSpend);
+    
+                await expect(saveContract.deposit(amountDepositedByUser))
+                .to.emit(saveContract, "SavingSuccessful").withArgs(owner, amountDepositedByUser);
+        })
         
     });
 
