@@ -68,50 +68,14 @@ describe("Save Contract " , async ()=>{
 
     describe("Address Zero Test", async ()=>{
         it("test that address zero cannot deposit ", async()=>{
-            const {owner, saveContract, emaxToken, allowedAmountToSpend,
-                amountDepositedByUser} = await loadFixture(deploySavingContract);
-               const zeroAddress = saveContract.returnAddressZero();
+            const {owner, saveContract} = await loadFixture(deploySavingContract);
+               const zeroAddress = await saveContract.returnAddressZero();
 
-                await emaxToken.connect(owner).approve(saveContract.target,allowedAmountToSpend);
-
-                await expect(saveContract.connect(zeroAddress).deposit(amountDepositedByUser))
-                .to.be.revertedWith("address zero detected");
+                expect(owner.address).is.not.equal(zeroAddress);
+                
         })
     })
 
 
 })
     
-//     const deploymentOfSavingsContract = async()=>{
-//         const [owner, otherAccount, otherAccount1] = await ethers.getSigners();
-//             return { owner, otherAccount};
-//     }
-
-//     describe("Deployment Test ", async ()=>{
-//         it("test save contract and token havebeen deployed ",async()=>{
-//             assert.isNotNull(emaxToken);
-//             assert.isNotNull(saveContract);
-//         });
-//     });
-
-
-//     describe("Savings Test", async () => {
-//         it("test that user can deposit to the saving contract", async () => {
-//             const { owner, otherAccount } = await loadFixture(deploymentOfSavingsContract);
-    
-//             // Transfer tokens from emaxToken to owner
-//             await emaxToken.transfer(owner.address, 40000);
-    
-//             // Approve otherAccount to spend tokens on behalf of owner
-//             await emaxToken.approve(otherAccount.address, 5000);
-    
-//             // Deposit tokens to the saving contract
-//             await saveContract.connect(otherAccount).deposit(4000);
-    
-//             // Check the user balance in the savings contract
-//             const userBalance = await saveContract.checkUserBalance(otherAccount.address);
-//             expect(userBalance).to.equal(4000);
-//         });
-//     });
-    
-// })

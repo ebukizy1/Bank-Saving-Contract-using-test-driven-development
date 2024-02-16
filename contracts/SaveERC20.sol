@@ -9,6 +9,7 @@ contract SaveERC20 {
     address owner;
 
     mapping(address => uint256) savings;
+    address myAddress = address(0);
 
     event SavingSuccessful(address sender, uint256 amount);
     event WithdrawSuccessful(address receiver, uint256 amount);
@@ -60,7 +61,7 @@ contract SaveERC20 {
         IERC20(savingToken).transfer(msg.sender, _amount);
     }
 
-    function returnAddressZero() external pure returns(address){
-        return address(0);
+    function returnAddressZero () external view returns(address){
+        return myAddress;
     }
 }
